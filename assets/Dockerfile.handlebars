@@ -1,0 +1,6 @@
+FROM hasura/graphql-engine:v{{HASURA_REMOTE_VERSION}}
+
+WORKDIR /app
+
+COPY ./hasura/metadata /hasura-metadata
+COPY ./hasura/migrations /hasura-migrations

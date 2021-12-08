@@ -1,0 +1,15 @@
+# Running locally
+
+## Start hasura engine
+```sh
+docker compose up
+```
+This start the hasura engine with postgres db on docker.
+You can go to http://localhost:8080/ to see the UI.
+
+## Modify the schema and create migration
+```sh
+npm run console
+```
+this open the hasura console on http://localhost:9695/, you can use the UI to create the schema and create the migrations.
+

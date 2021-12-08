@@ -1,0 +1,63 @@
+version: '3.6'
+services:
+  postgres:
+    image: postgres:12
+    restart: always
+    volumes:
+    - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+
+  hasura:
+    image: hasura/graphql-engine:v{{HASURA_REMOTE_VERSION}}
+    ports:
+    - "8080:8080"
+    depends_on:
+    - "postgres"
+    restart: always
+    volumes:
+      - ./migrations:/hasura-migrations
+      - ./metadata:/hasura-metadata
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      {{!-- HASURA_GRAPHQL_DEV_MODE: "true" --}}
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      {{#if HASURA_SECRET}}
+      HASURA_GRAPHQL_ADMIN_SECRET: {{HASURA_SECRET}}
+      {{/if}}
+
+      # uncomment to add action base url
+      # ACTION_BASE_URL: http://host.docker.internal:3000
+
+      # to verify jwt
+      # HASURA_GRAPHQL_JWT_SECRET: 
+
+      # HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public-role
+
+
+
+  # this console is used to run migration, ENABLE_CONSOLE is false so hasura console can connect
+  hasura-migration-mode:
+    image: hasura/graphql-engine:v{{HASURA_REMOTE_VERSION}}.cli-migrations-v3
+    ports:
+    - "8081:8080"
+    depends_on:
+    - "postgres"
+    restart: always
+    volumes:
+      - ./migrations:/hasura-migrations
+      - ./metadata:/hasura-metadata
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "false"
+      {{#if HASURA_SECRET}}
+      HASURA_GRAPHQL_ADMIN_SECRET: {{HASURA_SECRET}}
+      {{/if}}
+      # uncomment to add action base url
+      # ACTION_BASE_URL: http://host.docker.internal:3000
+
+
+volumes:
+  db_data:
+
