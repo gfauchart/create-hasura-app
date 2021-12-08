@@ -9,10 +9,6 @@
   "bin": {
     "create-hasura-app": "./src/index.js"
   },
-  "files": [
-    "src/index.js",
-    "./assets"
-  ],
   "author": "",
   "license": "MIT",
   "dependencies": {

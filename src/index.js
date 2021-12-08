@@ -98,7 +98,7 @@ async function run() {
     'metadata/databases/databases.yaml',
   ];
   assets.forEach((asset) => {
-    const file = fs.readFileSync(`${__dirname}/../assets/${asset}.handlebars`).toString();
+    const file = fs.readFileSync(`${__dirname}/assets/${asset}.handlebars`).toString();
     const template = Handlebars.compile(file)(options);
     fs.writeFileSync(path.join(root, asset), template);
   });
